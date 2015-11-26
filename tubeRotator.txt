@@ -1,0 +1,25 @@
+/*
+Arduino Servo
+Заметьте мы используем неполноценный привод
+Который поворачивается только в пределах 0-180 градусов
+*/
+#include "Servo.h"
+//we are using servomotor sg90 of Tower Pro 
+Servo servoMain; // Объект Servo
+#define updateTime 1000 // промежуток времени через который падают Конфетоиды 
+#define numberOfBuckets 3 // число ведер
+// also the range should be chosen properly as it can be inefficient to use obvious 0-180
+int temp;
+void setup()
+{
+ temp=2;
+   servoMain.attach(10); // Servo присоединен к 10 выводу
+}
+//int currentBucket();
+void loop()
+{
+  
+  servoMain.write(temp*180/(numberOfBuckets-1));
+delay(updateTime);     // Пауза 2 сек.
+  
+}
