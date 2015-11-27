@@ -1,0 +1,59 @@
+#include <Servo.h>
+
+#define S2 7
+#define S3 8
+#define OUT 2
+#define servoPin 10
+
+#define range 180
+#define numberOfBuckets 3
+
+Servo servoMain;
+
+int rColour;
+int bColour;
+int gColour;
+
+unsigned int pulseWidth;
+
+int dominant(){
+if(rColour>=gColour&&rColour>=bColour){Serial.println("Red"); return 0;}
+else if(bColour>=rColour&&bColour>=gColour){Serial.println("Blue");return 1;}
+else if(gColour>=rColour&&gColour>=bColour){Serial.println("Green");return 2;}
+}
+
+void setup(){
+Serial.begin(9600);
+
+servoMain.attach(servoPin);
+
+pinMode(S2,OUTPUT);
+pinMode(S3,INPUT);
+
+pinMode(OUT,INPUT);
+}
+
+void loop(){
+digitalWrite(S2,LOW);
+digitalWrite(S3,LOW);
+
+pulseWidth=pulseIn(OUT,LOW);
+rColour=pulseWidth/400.-1;
+rColour=(255-rColour);
+
+digitalWrite(S2,LOW);
+digitalWrite(S3,HIGH);
+
+pulseWidth=pulseIn(OUT,LOW);
+bColour=pulseWidth/400.-1;
+bColour=(255-bColour);
+
+digitalWrite(S2,HIGH);
+digitalWrite(S3,HIGH);
+
+pulseWidth=pulseIn(OUT,LOW);
+gColour=pulseWidth/400.-1;
+gColour=(255-gColour);
+
+servoMain.write(dominant()*range/(numberOfBuckets-1));
+}
